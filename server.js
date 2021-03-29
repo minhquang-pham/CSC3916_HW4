@@ -174,6 +174,32 @@ router.route('/movies')
         })
     });
 
+router.route('/reviews')
+    .post(authJwtController.isAuthenticated, function (req, res) {
+        console.log(req.body);
+        if (!req.body.title || !req.body.author || !req.body.review || !req.body.score) {
+            res.json({success: false, message: "An entry requires a title, the year author, the review, and a score"});
+        } else {
+            var review = new Review();
+
+            review.title = req.body.title;
+            review.author = req.body.author;
+            review.review = req.body.review;
+            review.score = req.body.score;
+            review.save(function(err){
+            if (err) {
+                return res.json(err);
+                }
+            res.json({success: true, msg: 'Review saved.'});
+            })
+        }
+    })
+    .get(authJwtController.isAuthenticated, function (req, res) {
+        Review.find({}, function(err, reviews) {
+                res.json({Review: reviews});
+        })
+    });
+
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
 module.exports = app; // for testing only
