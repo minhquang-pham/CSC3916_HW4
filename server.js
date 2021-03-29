@@ -179,7 +179,7 @@ router.route('/movies')
                         }
                         else {
                             if (result.length == 0) {
-                                return res.status(400).json({ success: false, message: 'No matching title or no reviews. ' });
+                                return res.status(400).json({ success: false, message: 'No reviews were found. ' });
                             }
                             else {
                                 return res.status(200).json(result)
