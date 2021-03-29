@@ -170,6 +170,23 @@ router.route('/movies')
                     return res.status(404).json({ success: false, message: "Error: No match" });
                 }
                 })
+                if (req.body.reviews == true) {
+                    Movie.aggregate().match({ title: req.body.title })
+                    .lookup({ from: 'reviews', localField: 'title', foreignField: 'title', as: 'reviews' })
+                    .exec((err, result) => {
+                        if (err) {
+                            return res.status(400).json({ success: false, message: err });
+                        }
+                        else {
+                            if (result.length == 0) {
+                                return res.status(400).json({ success: false, message: 'No matching title or no reviews. ' });
+                            }
+                            else {
+                                return res.status(200).json(result)
+                            }
+                        }
+                    })
+                }
             }
         })
     });
@@ -180,18 +197,33 @@ router.route('/reviews')
         if (!req.body.title || !req.body.author || !req.body.review || !req.body.score) {
             res.json({success: false, message: "An entry requires a title, the year author, the review, and a score"});
         } else {
-            var review = new Review();
-
-            review.title = req.body.title;
-            review.author = req.body.author;
-            review.review = req.body.review;
-            review.score = req.body.score;
-            review.save(function(err){
-            if (err) {
-                return res.json(err);
+             Movie.findOne({ title: req.body.title }, (err, movie) => {
+                if (err) {
+                    return res.status(403).json({ success: false, message: "Error creating review" });
+                } else {
+                    if (!movie) {
+                        return res.status(403).json({ success: false, message: "Unable to find movie title" });
+                    } else {
+                        review.save(function (err) {
+                            if (err) {
+                                return res.json({ success: false, message: "Error: " + err });
+                            } else {
+                                var review = new Review();
+                                review.title = req.body.title;
+                                review.author = req.body.author;
+                                review.review = req.body.review;
+                                review.score = req.body.score;
+                                review.save(function(err){
+                                    if (err) {
+                                        return res.json(err);
+                                    }
+                                    res.json({success: true, msg: 'Review saved.'});
+                                })
+                            }
+                        });
+                    }
                 }
-            res.json({success: true, msg: 'Review saved.'});
-            })
+            }};
         }
     })
     .get(authJwtController.isAuthenticated, function (req, res) {
