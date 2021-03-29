@@ -110,7 +110,7 @@ router.route('/movies')
             res.json({success:false, message: "Please provide a title to update"});
         }else{
             if (req.body.newTitle){    
-                Movie.findOneAndUpdate(req.body.title, req.body.newTitle, function(err, movie) {
+                Movie.findOneAndUpdate(title: req.body.title, title: req.body.newTitle, function(err, movie) {
                     if(err){
                         res.status(403).json({success:false, message: "Can not update Movie"});
                     }else{
@@ -119,7 +119,7 @@ router.route('/movies')
                 });
             }
             if (req.body.newYear){    
-                Movie.findOneAndUpdate(req.body.year, req.body.newYear, function(err, movie) {
+                Movie.findOneAndUpdate(title: req.body.title, year: req.body.newYear, function(err, movie) {
                     if(err){
                         res.status(403).json({success:false, message: "Can not update Movie"});
                     }else{
@@ -128,7 +128,7 @@ router.route('/movies')
                 });
             }
             if (req.body.newGenre){    
-                Movie.findOneAndUpdate(req.body.genre, req.body.newGenre, function(err, movie) {
+                Movie.findOneAndUpdate(title: req.body.title, genre: req.body.newGenre, function(err, movie) {
                     if(err){
                         res.status(403).json({success:false, message: "Can not update Movie"});
                     }else{
@@ -142,7 +142,7 @@ router.route('/movies')
         if(!req.body.title){
             res.json({success:false, message: "Please provide a title to delete"});
         }else{
-            Movie.findOneAndDelete(req.body.title, function(err, movie) {
+            Movie.findOneAndDelete(title: req.body.title, function(err, movie) {
                 if(err){
                     res.status(403).json({success:false, message: "Error: Could not delete"});
                 }else if(!movie){
@@ -156,7 +156,19 @@ router.route('/movies')
     })
     .get(authJwtController.isAuthenticated, function (req, res) {
         Movie.find({}, function(err, movies) {
-            res.json({Movie: movies});
+            if(!req.body.title){
+                res.json({Movie: movies});
+            } else{
+                Movie.find({ "title": req.params.movieTitle }).select("title year genre actors").exec(function (err, movie) {
+                if (err) {
+                    return res.status(403).json({ success: false, message: "Error: Movie not found." });
+                }
+                if (movie && movie.length > 0) {
+                    return res.status(200).json({ success: true, message: "Movie found.", movie: movie });
+                } else {
+                    return res.status(404).json({ success: false, message: "Error: No match" });
+                }
+            })
         })
     });
 
