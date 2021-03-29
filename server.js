@@ -204,23 +204,17 @@ router.route('/reviews')
                     if (!movie) {
                         return res.status(403).json({ success: false, message: "Unable to find movie title" });
                     } else {
-                        review.save(function (err) {
+                        var review = new Review();
+                        review.title = req.body.title;
+                        review.author = req.body.author;
+                        review.review = req.body.review;
+                        review.score = req.body.score;
+                        review.save(function(err){
                             if (err) {
-                                return res.json({ success: false, message: "Error: " + err });
-                            } else {
-                                var review = new Review();
-                                review.title = req.body.title;
-                                review.author = req.body.author;
-                                review.review = req.body.review;
-                                review.score = req.body.score;
-                                review.save(function(err){
-                                    if (err) {
-                                        return res.json(err);
-                                    }
-                                    res.json({success: true, msg: 'Review saved.'});
-                                })
+                                return res.json(err);
                             }
-                        });
+                            res.json({success: true, msg: 'Review saved.'});
+                        })
                     }
                 }
             });
