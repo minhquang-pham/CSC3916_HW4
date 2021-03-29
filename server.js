@@ -159,7 +159,7 @@ router.route('/movies')
             if(!req.body.title){
                 res.json({Movie: movies});
             } else{
-                Movie.find({ title: req.params.movieTitle }).select("title year genre actors").exec(function (err, movie) {
+                Movie.find({ title: req.body.title }).select("title year genre actors").exec(function (err, movie) {
                 if (err) {
                     return res.status(403).json({ success: false, message: "Error: Movie not found." });
                 }
