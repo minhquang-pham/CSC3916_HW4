@@ -223,7 +223,7 @@ router.route('/reviews')
                         });
                     }
                 }
-            }};
+            });
         }
     })
     .get(authJwtController.isAuthenticated, function (req, res) {
