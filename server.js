@@ -168,7 +168,8 @@ router.route('/movies')
                 } else {
                     return res.status(404).json({ success: false, message: "Error: No match" });
                 }
-            })
+                })
+            }
         })
     });
 
