@@ -18,7 +18,7 @@ var ReviewSchema = new Schema({
     title: {type: String, required: true},
     author: {type: String, required: true},
     review: {type: String, required: true},
-    score: {type: String, required: true}
+    score: {type: Number, required: true}
 });
 
 //return the model to server
