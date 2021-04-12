@@ -20,7 +20,8 @@ var MovieSchema = new Schema({
     genre: {type: String, required: true, enum:['Action', 'Adventure',  'Comedy',  'Drama',  'Fantasy',  'Horror',  'Mystery',  'Thriller', 'Western'] },
     actors : [{ActorName:{type:String, required: true}, CharacterName:{type:String, required: true}},
               {ActorName:{type:String, required: true}, CharacterName:{type:String, required: true}},
-              {ActorName:{type:String, required: true}, CharacterName:{type:String, required: true}}]
+              {ActorName:{type:String, required: true}, CharacterName:{type:String, required: true}}],
+    imageURL : {type: String, required: true}
 });
 
 //return the model to server
