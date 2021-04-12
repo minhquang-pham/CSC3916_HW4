@@ -173,6 +173,7 @@ router.route('/movies')
                 if (req.body.reviews == true) {
                     Movie.aggregate().match({ title: req.body.title })
                     .lookup({ from: 'reviews', localField: 'title', foreignField: 'title', as: 'reviews' })
+                    .addFields({avgRating: {$avg: "$reviews.score"}})
                     .exec((err, result) => {
                         if (err) {
                             return res.status(400).json({ success: false, message: err });
