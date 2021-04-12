@@ -155,6 +155,7 @@ router.route('/movies')
             }
 
     })
+/*
     .get(authJwtController.isAuthenticated, function (req, res) {
         Movie.find({}, function(err, movies) {
             if(!req.body.title){
@@ -191,7 +192,7 @@ router.route('/movies')
             }
         })
     });
-
+*/
 router.route('/reviews')
     .post(authJwtController.isAuthenticated, function (req, res) {
         console.log(req.body);
